@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>轻派茶 · 3步找到你的茶方案</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #F9F6F0;
+    --btn: #C7E9D0;
+    --btn-hover: #a8d9b4;
+    --accent: #8B5A2B;
+    --text: #3d3226;
+    --text-secondary: #7a6e5e;
+    --text-muted: #b0a595;
+    --white: #fff;
+    --border: #e0d8cc;
+    --shadow: 0 4px 12px rgba(0,0,0,0.04);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Noto Serif SC', 'Source Han Serif SC', serif;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(199, 233, 208, 0.18) 0%, rgba(249, 246, 240, 0) 100%),
+      var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .app {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 0 16px 16px;
+    min-height: 100vh;
+  }
+
+  /* ── Top Navigation ── */
+  .top-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 12px;
+    margin: 0 -16px 18px;
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .top-nav.has-back { justify-content: space-between; }
+  .nav-back, .nav-home-link {
+    font-size: 0.8rem;
+    color: var(--accent);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    padding: 4px 0;
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    min-width: 48px;
+    display: none;
+  }
+  .top-nav.has-back .nav-back,
+  .top-nav.has-back .nav-home-link { display: block; }
+  .nav-back { text-align: left; }
+  .nav-home-link { text-align: right; }
+  .nav-title {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: 1.5px;
+  }
+
+  /* ── Page switching ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── Back button ── */
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 0;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Main hero ── */
+  .hero-logo {
+    display: block;
+    width: 64px;
+    height: auto;
+    margin: 12px auto 0;
+  }
+  .hero-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text);
+    margin: 12px 0 6px;
+    letter-spacing: 2px;
+  }
+  .hero-sub {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+    line-height: 1.6;
+  }
+  .hero-tags {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+  .hero-tag {
+    display: inline-block;
+    padding: 5px 16px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    background: #eaf7ed;
+    color: #5a8a6a;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    animation: tag-breathe 4s ease-in-out infinite;
+  }
+  .hero-tag:nth-child(1) { animation-delay: 0s; }
+  .hero-tag:nth-child(2) { animation-delay: 1.3s; }
+  .hero-tag:nth-child(3) { animation-delay: 2.6s; }
+  @keyframes tag-breathe {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.80; }
+  }
+
+  /* ── Feature cards ── */
+  .feature-card {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 24px 20px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+  .feature-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+  .feature-card p  { font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.6; }
+  .feature-card .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* ── Enterprise Custom Section ── */
+  .enterprise-section {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin: 18px 0;
+    box-shadow: var(--shadow);
+    text-align: center;
+  }
+  .enterprise-section h4 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .enterprise-section .es-tags {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0 14px;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+  }
+  .enterprise-section .es-tags span {
+    background: #faf7f1;
+    padding: 4px 10px;
+    border-radius: 12px;
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 24px;
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: var(--btn);
+    color: var(--accent);
+  }
+  .btn-primary:active { background: var(--btn-hover); }
+  .btn-secondary {
+    background: var(--white);
+    color: var(--accent);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:active { background: #f5f2eb; }
+  .btn-accent {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-accent:active { opacity: 0.85; transform: scale(0.97); }
+  .btn-outline {
+    background: var(--white);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    font-size: 0.78rem;
+  }
+  .btn-outline:active { background: #f9f7f2; }
+  .btn-full { width: 100%; }
+
+  /* ── Form ── */
+  .form-group { margin-bottom: 14px; }
+  .form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 5px;
+  }
+  .form-group label .hint {
+    font-weight: 400;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+  }
+  .form-group input[type="text"],
+  .form-group input[type="tel"],
+  .form-group input[type="email"],
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 0.85rem;
+    background: var(--white);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus { border-color: var(--accent); }
+  .form-group textarea { min-height: 70px; resize: vertical; }
+
+  .radio-group, .check-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .radio-option, .check-option {
+    flex: 1;
+    min-width: calc(50% - 6px);
+  }
+  .radio-option input, .check-option input { display: none; }
+  .radio-option label, .check-option label {
+    display: block;
+    text-align: center;
+    padding: 9px 8px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--white);
+  }
+  .radio-option input:checked + label,
+  .check-option input:checked + label {
+    border-color: var(--accent);
+    background: #f5efe4;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .radio-option.full { min-width: 100%; }
+
+  .cond-group { display: none; margin-top: 12px; }
+  .cond-group.show { display: block; }
+
+  .error-msg {
+    color: #d32f2f;
+    font-size: 0.7rem;
+    margin-top: 2px;
+    display: none;
+  }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 24px;
+    font-size: 0.85rem;
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
+  /* ── Slider area ── */
+  .slider-section {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    margin: 16px 0;
+    box-shadow: var(--shadow);
+  }
+  .slider-section h4 { font-size: 0.95rem; margin-bottom: 4px; }
+  .slider-sub {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .slider-row input[type=range] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(to right, #C7E9D0 0%, #d4b896 60%, var(--accent) 100%);
+    outline: none;
+  }
+  .slider-row input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(139,90,43,0.35);
+    border: 2.5px solid #fff;
+  }
+  .slider-row input[type=range]::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(139,90,43,0.35);
+    border: 2.5px solid #fff;
+  }
+  .slider-val {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 54px;
+    text-align: right;
+  }
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-top: -10px;
+    margin-bottom: 14px;
+    padding: 0 4px;
+  }
+  .price-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .price-item {
+    background: #faf7f1;
+    border-radius: var(--radius-sm);
+    padding: 12px 10px;
+    text-align: center;
+  }
+  .price-item .val { font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+  .price-item .lbl { font-size: 0.7rem; color: var(--text-secondary); margin-top: 2px; }
+  .price-item.full { grid-column: 1 / -1; }
+  .price-item.highlight {
+    background: linear-gradient(135deg, #f5efe4, #faf7f1);
+    border: 1px solid #e0d8cc;
+  }
+  .price-note { font-size: 0.7rem; color: var(--text-muted); margin-top: 10px; text-align: center; }
+
+  /* ── Purchase Suggestion ── */
+  .purchase-suggestion {
+    background: #faf7f1;
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-top: 14px;
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    transition: all 0.2s;
+  }
+  .purchase-suggestion .ps-qty {
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .purchase-suggestion .ps-desc {
+    color: var(--text-secondary);
+  }
+
+  /* ── Trust Module ── */
+  .trust-module {
+    margin: 28px 0 20px;
+  }
+  .trust-module h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+  }
+  .trust-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .trust-item {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 18px 14px;
+    text-align: center;
+    box-shadow: 0 1px 8px rgba(139,90,43,0.05);
+  }
+  .trust-item .t-icon {
+    font-size: 1.6rem;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .trust-item .t-title {
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .trust-item .t-desc {
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ── Brochure Section ── */
+  .brochure-section {
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+    margin: 44px 0 24px;
+    text-align: center;
+    box-shadow: none;
+  }
+  .brochure-section h4 {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+  }
+  .brochure-section p {
+    font-size: 0.66rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    line-height: 1.5;
+    letter-spacing: 0.5px;
+  }
+  .brochure-section .btn-brochure {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 20px;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    font-family: inherit;
+    font-size: 0.72rem;
+    font-weight: 400;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .brochure-section .btn-brochure:active {
+    background: rgba(0,0,0,0.02);
+  }
+
+  /* ── Product cards ── */
+  .series-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 20px 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .series-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .product-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 2px 10px;
+    scrollbar-width: none;
+  }
+  .product-scroll::-webkit-scrollbar { display: none; }
+  .product-card {
+    flex: 0 0 auto;
+    width: 148px;
+    scroll-snap-align: start;
+    background: #fefcf8;
+    border-radius: 14px;
+    padding: 16px 12px 14px;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(139,90,43,0.07);
+    transition: transform 0.2s;
+    cursor: default;
+  }
+  .product-card:active { transform: scale(0.97); }
+  .product-card .p-emoji {
+    font-size: 2.4rem;
+    display: block;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  .product-card .p-name {
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .product-card .p-scene {
+    display: inline-block;
+    font-size: 0.65rem;
+    color: var(--accent);
+    background: #f5efe4;
+    padding: 2px 10px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+  }
+  .product-card .p-price {
+    display: block;
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.9rem;
+  }
+  .product-card .p-price small {
+    font-weight: 400;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+  }
+
+  /* ── Step flow (customization) ── */
+  .step-flow {
+    display: flex;
+    gap: 6px;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+  .step-flow .dot {
+    flex: 1;
+    min-width: 50px;
+    text-align: center;
+    position: relative;
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+  }
+  .step-flow .dot::before {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--btn);
+    margin: 0 auto 4px;
+    line-height: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.8rem;
+  }
+  .step-flow .dot:nth-child(1)::before { content: '1'; }
+  .step-flow .dot:nth-child(2)::before { content: '2'; }
+  .step-flow .dot:nth-child(3)::before { content: '3'; }
+  .step-flow .dot:nth-child(4)::before { content: '4'; }
+  .step-flow .dot:nth-child(5)::before { content: '5'; }
+  .step-flow .dot::after {
+    content: '→';
+    position: absolute;
+    top: 6px;
+    right: -8px;
+    color: var(--border);
+    font-size: 0.7rem;
+  }
+  .step-flow .dot:last-child::after { content: none; }
+
+  /* ── Copyable wechat ── */
+  .wechat-box {
+    background: #faf7f1;
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-top: 8px;
+  }
+  .wechat-box .copy-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    padding: 6px 14px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  /* ── Modal (small inline) ── */
+  .inline-modal {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 14px 0;
+    box-shadow: var(--shadow);
+    display: none;
+  }
+  .inline-modal.show { display: block; }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 16px 0;
+  }
+
+  /* ── Floating Contact Button ── */
+  .float-contact {
+    position: fixed;
+    bottom: 24px;
+    right: 16px;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  .float-contact .fc-main {
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 20px;
+    background: rgba(139,90,43,0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #fff;
+    border: none;
+    font-size: 0.76rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 14px rgba(139,90,43,0.25);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .float-contact .fc-main:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 8px rgba(139,90,43,0.2);
+  }
+  .float-contact .fc-popup {
+    display: none;
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    font-size: 0.82rem;
+    white-space: nowrap;
+    animation: fc-fadeInUp 0.25s ease;
+    line-height: 1.8;
+  }
+  .float-contact .fc-popup.show { display: block; }
+  .float-contact .fc-popup .fc-wechat {
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .float-contact .fc-popup .fc-phone {
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .float-contact .fc-popup .fc-copy {
+    margin-left: 6px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 3px 10px;
+    font-size: 0.68rem;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  @keyframes fc-fadeInUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- ==================== PAGE: HOME ==================== -->
+  <div class="page active" id="page-home">
+    <header class="top-nav">
+      <button class="nav-back" onclick="showPage('page-home')">← 返回</button>
+      <span class="nav-title">轻派茶</span>
+      <a class="nav-home-link" onclick="showPage('page-home')">首页</a>
+    </header>
+    <img class="hero-logo" src="/yangyang/assets/logo.png" alt="轻派茶">
+    <div class="hero-title">轻一点，好一点</div>
+    <div class="hero-sub">花果茶冷泡热泡皆宜｜养生茶不用煮，即泡即饮</div>
+    <div class="hero-tags">
+      <span class="hero-tag">0糖0卡</span>
+      <span class="hero-tag">即泡即饮</span>
+      <span class="hero-tag">冷热皆宜</span>
+    </div>
+
+    <div class="feature-card">
+      <h3>我想试喝 🍵</h3>
+      <p>先领样品，找到适合自己的口味。</p>
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="showPage('page-personal-form')">👤 个人体验</button>
+        <button class="btn btn-outline" onclick="showPage('page-enterprise-form')">🏢 企业试喝</button>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <h3>我要采购 📦</h3>
+      <p>查看批量采购价格与企业方案。</p>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="showPage('page-bulk-purchase')">查看批量采购价 →</button>
+      </div>
+    </div>
+
+    <!-- Brochure Section -->
+    <div class="brochure-section">
+      <h4>了解轻派茶 →</h4>
+      <p>品牌理念 / 产品系列 / 合作方式</p>
+      <a class="btn-brochure" href="/yangyang/轻派茶品牌手册.pdf" target="_blank">查看品牌手册</a>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE: PERSONAL FORM ==================== -->
+  <div class="page" id="page-personal-form">
+    <button class="back-btn" onclick="showPage('page-home')">← 返回首页</button>
+    <h3 style="font-size:1.1rem;margin-bottom:14px;">👤 个人申领样品</h3>
+    <form id="personalForm" onsubmit="handlePersonalSubmit(event)">
+      <div class="form-group">
+        <label>赠品类型</label>
+        <div class="radio-group">
+          <div class="radio-option full"><input type="radio" name="p_gift" value="散包20包" id="p_gift_1" checked><label for="p_gift_1">散包20包</label></div>
+          <div class="radio-option full"><input type="radio" name="p_gift" value="任意口味盒装1盒" id="p_gift_2"><label for="p_gift_2">任意口味盒装1盒</label></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>姓名 <span class="hint">（必填）</span></label>
+        <input type="text" name="p_name" required placeholder="请输入您的姓名">
+      </div>
+      <div class="form-group">
+        <label>手机号 <span class="hint">（必填，11位手机号）</span></label>
+        <input type="tel" name="p_phone" required placeholder="请输入手机号码" pattern="1[3-9]\d{9}">
+      </div>
+      <div class="form-group">
+        <label>收货地址 <span class="hint">（必填）</span></label>
+        <textarea name="p_address" required placeholder="省/市/区 + 详细地址"></textarea>
+      </div>
+      <div class="form-group">
+        <label>采购意向</label>
+        <div class="radio-group" id="p-intent-group">
+          <div class="radio-option full"><input type="radio" name="p_intent" value="1个月内会采购" id="p_intent_1" checked><label for="p_intent_1">1个月内会采购</label></div>
+          <div class="radio-option full"><input type="radio" name="p_intent" value="3个月内会采购" id="p_intent_2"><label for="p_intent_2">3个月内会采购</label></div>
+          <div class="radio-option full"><input type="radio" name="p_intent" value="只是看看，暂不采购" id="p_intent_3"><label for="p_intent_3">只是看看，暂不采购</label></div>
+          <div class="radio-option full"><input type="radio" name="p_intent" value="不确定" id="p_intent_4"><label for="p_intent_4">不确定</label></div>
+        </div>
+      </div>
+      <div class="cond-group" id="p-quantity-group">
+        <div class="form-group">
+          <label>预计采购量</label>
+          <div class="radio-group">
+            <div class="radio-option"><input type="radio" name="p_quantity" value="10-50盒" id="p_qty_1" checked><label for="p_qty_1">10-50盒</label></div>
+            <div class="radio-option"><input type="radio" name="p_quantity" value="51-200盒" id="p_qty_2"><label for="p_qty_2">51-200盒</label></div>
+            <div class="radio-option full"><input type="radio" name="p_quantity" value="200盒以上" id="p_qty_3"><label for="p_qty_3">200盒以上</label></div>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-accent btn-full">提交申领 →</button>
+    </form>
+  </div>
+
+  <!-- ==================== PAGE: ENTERPRISE FORM ==================== -->
+  <div class="page" id="page-enterprise-form">
+    <button class="back-btn" onclick="showPage('page-home')">← 返回首页</button>
+    <h3 style="font-size:1.1rem;margin-bottom:14px;">🏢 企业申领样品</h3>
+    <form id="enterpriseForm" onsubmit="handleEnterpriseSubmit(event)">
+      <div class="form-group">
+        <label>赠品类型</label>
+        <div class="radio-group">
+          <div class="radio-option full"><input type="radio" name="e_gift" value="散包100包" id="e_gift_1" checked><label for="e_gift_1">散包100包</label></div>
+          <div class="radio-option full"><input type="radio" name="e_gift" value="任意口味盒装4盒" id="e_gift_2"><label for="e_gift_2">任意口味盒装4盒</label></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>公司名称 <span class="hint">（必填）</span></label>
+        <input type="text" name="e_company" required placeholder="请输入公司全称">
+      </div>
+      <div class="form-group">
+        <label>采购人身份</label>
+        <select name="e_role">
+          <option value="">请选择</option>
+          <option>行政/后勤</option>
+          <option>采购/供应链</option>
+          <option>人事/员工福利</option>
+          <option>老板/创始人</option>
+          <option>市场/品牌</option>
+          <option>其他</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>公司规模</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="e_scale" value="1-20人" id="e_scale_1" checked><label for="e_scale_1">1-20人</label></div>
+          <div class="radio-option"><input type="radio" name="e_scale" value="20-50人" id="e_scale_2"><label for="e_scale_2">20-50人</label></div>
+          <div class="radio-option"><input type="radio" name="e_scale" value="50-200人" id="e_scale_3"><label for="e_scale_3">50-200人</label></div>
+          <div class="radio-option"><input type="radio" name="e_scale" value="200-1000人" id="e_scale_4"><label for="e_scale_4">200-1000人</label></div>
+          <div class="radio-option full"><input type="radio" name="e_scale" value="1000人以上" id="e_scale_5"><label for="e_scale_5">1000人以上</label></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>姓名 <span class="hint">（必填）</span></label>
+        <input type="text" name="e_name" required placeholder="请输入联系人姓名">
+      </div>
+      <div class="form-group">
+        <label>手机号 <span class="hint">（必填，11位手机号）</span></label>
+        <input type="tel" name="e_phone" required placeholder="请输入手机号码" pattern="1[3-9]\d{9}">
+      </div>
+      <div class="form-group">
+        <label>收货地址 <span class="hint">（必填）</span></label>
+        <textarea name="e_address" required placeholder="省/市/区 + 详细地址"></textarea>
+      </div>
+      <div class="form-group">
+        <label>采购意向</label>
+        <div class="radio-group" id="e-intent-group">
+          <div class="radio-option full"><input type="radio" name="e_intent" value="1个月内会采购" id="e_intent_1" checked><label for="e_intent_1">1个月内会采购</label></div>
+          <div class="radio-option full"><input type="radio" name="e_intent" value="3个月内会采购" id="e_intent_2"><label for="e_intent_2">3个月内会采购</label></div>
+          <div class="radio-option full"><input type="radio" name="e_intent" value="只是看看，暂不采购" id="e_intent_3"><label for="e_intent_3">只是看看，暂不采购</label></div>
+          <div class="radio-option full"><input type="radio" name="e_intent" value="不确定" id="e_intent_4"><label for="e_intent_4">不确定</label></div>
+        </div>
+      </div>
+      <div class="cond-group" id="e-quantity-group">
+        <div class="form-group">
+          <label>预计采购量</label>
+          <div class="radio-group">
+            <div class="radio-option"><input type="radio" name="e_quantity" value="100-500盒" id="e_qty_1" checked><label for="e_qty_1">100-500盒</label></div>
+            <div class="radio-option"><input type="radio" name="e_quantity" value="500-2000盒" id="e_qty_2"><label for="e_qty_2">500-2000盒</label></div>
+            <div class="radio-option full"><input type="radio" name="e_quantity" value="2000盒以上" id="e_qty_3"><label for="e_qty_3">2000盒以上</label></div>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-accent btn-full">提交申领 →</button>
+    </form>
+  </div>
+
+  <!-- ==================== PAGE: BULK PURCHASE ==================== -->
+  <div class="page" id="page-bulk-purchase">
+    <button class="back-btn" onclick="showPage('page-home')">← 返回首页</button>
+    <h3 style="font-size:1.1rem;margin-bottom:4px;">📦 现货批量采购</h3>
+    <p style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:14px;">自由搭配花果茶与养生茶，总盒数越多折扣越大</p>
+
+    <!-- Product Series -->
+    <div class="series-title">🍑 花果茶系列 <span style="font-weight:400;font-size:0.7rem;color:var(--text-muted);">9包/盒 · ¥39</span></div>
+    <div class="product-scroll" id="flowerTeaList"></div>
+
+    <div class="series-title">🌿 养生茶系列 <span style="font-weight:400;font-size:0.7rem;color:var(--text-muted);">7包/盒 · ¥42</span></div>
+    <div class="product-scroll" id="healthTeaList"></div>
+
+    <!-- Slider -->
+    <div class="slider-section">
+      <h4>选择总采购盒数</h4>
+      <p class="slider-sub">拖动滑杆实时查看阶梯报价</p>
+      <div class="slider-row">
+        <input type="range" id="boxSlider" min="10" max="500" value="50" step="1" oninput="updatePrice()">
+        <span class="slider-val" id="boxCount">50</span>
+      </div>
+      <div class="slider-labels"><span>10盒</span><span>100盒</span><span>300盒</span><span>500盒</span></div>
+      <div class="price-detail">
+        <div class="price-item">
+          <div class="lbl">当前折扣</div>
+          <div class="val" id="discountLabel">8折</div>
+        </div>
+        <div class="price-item">
+          <div class="lbl">折后单盒均价</div>
+          <div class="val" id="avgPrice">¥32.40</div>
+        </div>
+        <div class="price-item">
+          <div class="lbl">花果茶折后单价 <span style="font-size:0.6rem;">(原¥39)</span></div>
+          <div class="val" id="flowerPrice">¥31.20</div>
+        </div>
+        <div class="price-item">
+          <div class="lbl">养生茶折后单价 <span style="font-size:0.6rem;">(原¥42)</span></div>
+          <div class="val" id="healthPrice">¥33.60</div>
+        </div>
+        <div class="price-item full highlight">
+          <div class="lbl">折后总价（按1:1混合估算）</div>
+          <div class="val" id="totalPrice">¥1,620</div>
+        </div>
+        <div class="price-item full highlight">
+          <div class="lbl">💰 相比零售价已节省</div>
+          <div class="val" id="savings">¥405</div>
+        </div>
+      </div>
+      <p class="price-note">* 以上按花果茶与养生茶 1:1 混合估算。实际价格根据具体口味配比计算。</p>
+    </div>
+
+    <!-- Purchase Suggestion -->
+    <div class="purchase-suggestion" id="purchaseSuggestion">
+      <span class="ps-qty">50盒</span><span class="ps-desc"> 适合：团队下午茶 / 小型活动</span>
+    </div>
+
+    <!-- Buttons -->
+    <div style="display:flex;flex-direction:column;gap:10px;margin:14px 0 16px;">
+      <button class="btn btn-accent btn-full" onclick="window.open(BULK_INQUIRY_LINK, '_blank')">📋 提交采购需求</button>
+      <button class="btn btn-secondary btn-full" onclick="showWechat()">💬 联系商务</button>
+    </div>
+
+    <!-- Wechat box -->
+    <div class="wechat-box" id="wechatBox" style="display:none;">
+      <span>微信：<strong id="wechatId">P139550560</strong></span>
+      <button class="copy-btn" onclick="copyWechat()">复制</button>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE: CUSTOMIZATION ==================== -->
+  <div class="page" id="page-customization">
+    <button class="back-btn" onclick="showPage('page-home')">← 返回首页</button>
+    <h3 style="font-size:1.1rem;margin-bottom:4px;">✨ 企业个性化定制</h3>
+    <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:12px;line-height:1.6;">
+      500盒起订，可定制现有11种口味及现有盒型。<br>
+      为您打造专属茶礼，适合员工福利、客户伴手礼、活动伴手礼等场景。
+    </p>
+
+    <div class="step-flow">
+      <div class="dot">对接需求</div>
+      <div class="dot">确认方案</div>
+      <div class="dot">报价</div>
+      <div class="dot">签署协议</div>
+      <div class="dot">大货到货</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0;">
+      <button class="btn btn-accent btn-full" onclick="window.open(CUSTOM_LINK, '_blank')">🎨 我想定制</button>
+      <button class="btn btn-secondary btn-full" onclick="showWechat()">💬 联系商务</button>
+    </div>
+    <div class="wechat-box" id="wechatBox2" style="display:none;">
+      <span>微信：<strong id="wechatId2">P139550560</strong></span>
+      <button class="copy-btn" onclick="copyWechat()">复制</button>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- Floating Contact Button -->
+<div class="float-contact" id="floatContact">
+  <div class="fc-popup" id="fcPopup">
+    <div>📱 电话：<span class="fc-phone">135-0157-2525</span></div>
+    <div>💬 微信：<span class="fc-wechat" id="fcWechatId">P139550560</span>
+    <button class="fc-copy" onclick="copyWechatFloat()">复制</button></div>
+  </div>
+  <button class="fc-main" onclick="toggleFloatContact()" title="联系商务">💬 联系商务</button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════ CONSTANTS ═══════════════════
+const WECHAT_ID = "P139550560";
+const PERSONAL_LINK  = "https://wj.qq.com/s2/26567771/kg2a/";
+const ENTERPRISE_LINK = "https://wj.qq.com/s2/26567424/cbea/";
+const BULK_INQUIRY_LINK = "https://wj.qq.com/s2/26567910/c4uk/";
+const CUSTOM_LINK = "https://wj.qq.com/s2/26567988/3ibi/";
+
+// ═══════════════════ PRODUCT DATA ═══════════════════
+const flowerTeas = [
+  { emoji:'🍇', name:'葡萄乌龙茶', desc:'果香清甜', scene:'办公提神' },
+  { emoji:'🌸', name:'桂花乌龙茶', desc:'桂花馥郁', scene:'午后放松时刻' },
+  { emoji:'🌹', name:'玫瑰乌龙茶', desc:'花香养颜', scene:'适合下午犯困时' },
+  { emoji:'🍑', name:'白桃乌龙茶', desc:'蜜桃少女心', scene:'适合下午犯困时' },
+  { emoji:'🍈', name:'荔枝乌龙茶', desc:'清甜解腻', scene:'夏日限定清爽' },
+];
+
+const healthTeas = [
+  { emoji:'🫘', name:'红豆薏米茶', desc:'祛湿消肿', scene:'久坐办公必备' },
+  { emoji:'🍐', name:'桂花雪梨茶', desc:'润喉清肺', scene:'秋冬办公室常备' },
+  { emoji:'🖤', name:'桑葚五黑茶', desc:'乌发养肾', scene:'加班熬夜常备' },
+  { emoji:'❤️', name:'人参五红茶', desc:'补气养血', scene:'熬夜后恢复状态' },
+  { emoji:'🍎', name:'苹果山楂茶', desc:'饭后刮油', scene:'饭后轻负担' },
+  { emoji:'🌺', name:'玫瑰桑葚茶', desc:'美白抗氧化', scene:'日常养生常备' },
+];
+
+// ═══════════════════ PAGE NAVIGATION ═══════════════════
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(pageId);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  // Toggle nav: home page = center only, sub-pages = show back/home links
+  const nav = document.querySelector('.top-nav');
+  if (pageId === 'page-home') {
+    nav.classList.remove('has-back');
+  } else {
+    nav.classList.add('has-back');
+  }
+  // hide dynamic elements when navigating
+  document.getElementById('wechatBox').style.display = 'none';
+  document.getElementById('wechatBox2').style.display = 'none';
+  document.getElementById('fcPopup').classList.remove('show');
+  hideToast();
+}
+
+// ═══════════════════ TOAST ═══════════════════
+let toastTimer;
+function showToast(msg, duration = 2000) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), duration);
+}
+function hideToast() {
+  const el = document.getElementById('toast');
+  el.classList.remove('show');
+  clearTimeout(toastTimer);
+}
+
+// ═══════════════════ CONDITIONAL: 预计采购量 ═══════════════════
+function setupConditionalDisplay(radioGroupId, targetGroupId) {
+  const group = document.getElementById(radioGroupId);
+  const target = document.getElementById(targetGroupId);
+  if (!group || !target) return;
+  const radios = group.querySelectorAll('input[type="radio"]');
+
+  function toggle() {
+    const checked = group.querySelector('input[type="radio"]:checked');
+    if (checked && (checked.value === '1个月内会采购' || checked.value === '3个月内会采购')) {
+      target.classList.add('show');
+    } else {
+      target.classList.remove('show');
+    }
+  }
+
+  radios.forEach(r => r.addEventListener('change', toggle));
+  toggle(); // init
+}
+
+setupConditionalDisplay('p-intent-group', 'p-quantity-group');
+setupConditionalDisplay('e-intent-group', 'e-quantity-group');
+
+// ═══════════════════ FORM: PERSONAL ═══════════════════
+function handlePersonalSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+  window.open(PERSONAL_LINK, '_blank');
+  showToast('已跳转至问卷，请完成申领');
+}
+
+// ═══════════════════ FORM: ENTERPRISE ═══════════════════
+function handleEnterpriseSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+  window.open(ENTERPRISE_LINK, '_blank');
+  showToast('已跳转至问卷，请完成申领');
+}
+
+// ═══════════════════ PRICE CALCULATION ═══════════════════
+function getDiscount(boxes) {
+  if (boxes >= 500) return 0.60;
+  if (boxes >= 300) return 0.70;
+  if (boxes >= 100) return 0.75;
+  if (boxes >= 50)  return 0.80;
+  if (boxes >= 20)  return 0.85;
+  return 0.90;
+}
+
+function getDiscountLabel(boxes) {
+  const d = getDiscount(boxes);
+  if (d === 0.90) return '9折';
+  if (d === 0.85) return '8.5折';
+  if (d === 0.80) return '8折';
+  if (d === 0.75) return '7.5折';
+  if (d === 0.70) return '7折';
+  return '6折';
+}
+
+function getPurchaseSuggestion(boxes) {
+  if (boxes < 50)  return { qty: boxes + '盒', desc: '适合：团队下午茶 / 小型活动' };
+  if (boxes < 100) return { qty: boxes + '盒', desc: '适合：部门福利 / 客户试饮' };
+  if (boxes < 300) return { qty: boxes + '盒', desc: '适合：员工福利 / 客户伴手礼' };
+  return { qty: boxes + '盒', desc: '适合：企业活动 / 节日礼赠' };
+}
+
+function updatePrice() {
+  const slider = document.getElementById('boxSlider');
+  const boxes = parseInt(slider.value);
+  const discount = getDiscount(boxes);
+
+  document.getElementById('boxCount').textContent = boxes;
+  document.getElementById('discountLabel').textContent = getDiscountLabel(boxes);
+
+  const avgOriginal = 40.5; // (39+42)/2
+  const avgDiscounted = avgOriginal * discount;
+  const totalDiscounted = boxes * avgDiscounted;
+  const savings = boxes * avgOriginal - totalDiscounted;
+
+  document.getElementById('avgPrice').textContent = '¥' + avgDiscounted.toFixed(2);
+  document.getElementById('flowerPrice').textContent = '¥' + (39 * discount).toFixed(2);
+  document.getElementById('healthPrice').textContent = '¥' + (42 * discount).toFixed(2);
+  document.getElementById('totalPrice').textContent = '¥' + totalDiscounted.toLocaleString('zh-CN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  document.getElementById('savings').textContent = '¥' + savings.toLocaleString('zh-CN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+  // Update purchase suggestion
+  const sug = getPurchaseSuggestion(boxes);
+  document.querySelector('#purchaseSuggestion .ps-qty').textContent = sug.qty;
+  document.querySelector('#purchaseSuggestion .ps-desc').textContent = ' ' + sug.desc;
+}
+
+// ═══════════════════ WECHAT ═══════════════════
+function showWechat() {
+  // show both wechat boxes (different pages may have one)
+  const box1 = document.getElementById('wechatBox');
+  const box2 = document.getElementById('wechatBox2');
+  const currentPage = document.querySelector('.page.active');
+  if (currentPage.id === 'page-customization') {
+    box2.style.display = 'flex';
+    box2.scrollIntoView({ behavior: 'smooth' });
+  } else {
+    box1.style.display = 'flex';
+    box1.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function copyWechat() {
+  navigator.clipboard.writeText(WECHAT_ID).then(() => {
+    showToast('微信号已复制：' + WECHAT_ID);
+  }).catch(() => {
+    showToast('请手动复制：' + WECHAT_ID, 3000);
+  });
+}
+
+// ═══════════════════ FLOATING CONTACT ═══════════════════
+function toggleFloatContact() {
+  const popup = document.getElementById('fcPopup');
+  popup.classList.toggle('show');
+}
+
+function copyWechatFloat() {
+  navigator.clipboard.writeText(WECHAT_ID).then(() => {
+    showToast('微信号已复制：' + WECHAT_ID);
+    document.getElementById('fcPopup').classList.remove('show');
+  }).catch(() => {
+    showToast('请手动复制：' + WECHAT_ID, 3000);
+  });
+}
+
+// Close float popup when clicking outside
+document.addEventListener('click', function(e) {
+  const fc = document.getElementById('floatContact');
+  const popup = document.getElementById('fcPopup');
+  if (popup.classList.contains('show') && !fc.contains(e.target)) {
+    popup.classList.remove('show');
+  }
+});
+
+// ═══════════════════ RENDER PRODUCT LISTS ═══════════════════
+function renderProductList(containerId, products, price) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = products.map(p => `
+    <div class="product-card">
+      <span class="p-emoji">${p.emoji}</span>
+      <div class="p-name">${p.name}</div>
+      <span class="p-scene">${p.scene}</span>
+      <div class="p-price">¥${price}<small>/盒</small></div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════ INIT ═══════════════════
+function init() {
+  updatePrice();
+  renderProductList('flowerTeaList', flowerTeas, 39);
+  renderProductList('healthTeaList', healthTeas, 42);
+
+  // Update product prices when slider changes (for visual reference only)
+  const slider = document.getElementById('boxSlider');
+  slider.addEventListener('input', () => {
+    updatePrice();
+    const discount = getDiscount(parseInt(slider.value));
+    renderProductList('flowerTeaList', flowerTeas, (39 * discount).toFixed(0));
+    renderProductList('healthTeaList', healthTeas, (42 * discount).toFixed(0));
+  });
+}
+
+init();
+</script>
+</body>
+</html>
